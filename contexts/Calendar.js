@@ -63,8 +63,6 @@ export const CalendarProvider = ({ children }) => {
           ? await getDefaultCalendarSource()
           : { isLocalAccount: true, name: "Expo Calendar" };
 
-      console.log("sorce", defaultCalendarSource);
-
       const newCalendarID = await Calendar.createCalendarAsync({
         title: "Expo Calendar",
         color: "blue",
@@ -82,7 +80,7 @@ export const CalendarProvider = ({ children }) => {
       setCalendars(fetchedCalendars);
       return newCalendarID;
     } catch (error) {
-      console.error("create calendar", error);
+      throw error;
     }
   };
 
@@ -98,18 +96,15 @@ export const CalendarProvider = ({ children }) => {
       ).toISOString()
     );
     setEvents(events);
-    console.log(events);
   };
 
   const addEvent = async (event) => {
-    // if (!appCalendarId) {
-    //   console.error("no app calendar");
-    //   return;
-    // }
-    const eventId = await Calendar.createEventAsync(
-      "CB4AE76E-A7BE-4C7A-B086-135888984B34",
-      event
-    );
+    if (!appCalendarId) {
+      console.error("no app calendar");
+      return;
+    }
+    const eventId = await Calendar.createEventAsync(appCalendarId, event);
+    fetchEvents();
     return eventId;
   };
 

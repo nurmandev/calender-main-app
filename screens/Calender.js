@@ -169,11 +169,8 @@ const Calendar = ({ navigation }) => {
         />
       </Appbar.Header>
       <FlatList
-        data={[
-          { color: "blue", id: appCalendarId, title: "All" },
-          ...calendars,
-        ]}
-        keyExtractor={(item) => item.id}
+        data={[{ color: "blue", id: null, title: "All" }, ...calendars]}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={[
