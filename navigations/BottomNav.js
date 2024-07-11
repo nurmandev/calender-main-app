@@ -34,6 +34,7 @@ function BottomNav() {
           paddingTop: 20,
         },
       })}
+      initialRouteName="Calendar"
     >
       <Tab.Screen name="Sync" component={Sync} />
       <Tab.Screen name="Calendar" component={Calender} />

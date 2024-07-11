@@ -7,7 +7,7 @@ import { useSync } from "../contexts/Sync";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const Sync = () => {
+const Sync = ({ navigation }) => {
   const {
     syncToOutlook,
     syncToApple,
@@ -135,7 +135,7 @@ const Sync = () => {
         <Button
           icon="plus"
           mode="contained"
-          onPress={() => console.log("Pressed")}
+          onPress={() => navigation.push("AddEvent")}
           labelStyle={{ fontWeight: "600", fontSize: 16 }}
           style={{ borderRadius: 15, padding: 5 }}
         >

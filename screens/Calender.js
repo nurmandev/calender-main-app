@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import { Agenda, LocaleConfig } from "react-native-calendars";
-import { Appbar } from "react-native-paper";
+import { Appbar, Button } from "react-native-paper";
 import moment from "moment";
 import { useSync } from "../contexts/Sync";
+import { useCalendar } from "../contexts/Calendar";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -50,8 +57,10 @@ LocaleConfig.defaultLocale = "en";
 
 const Calendar = () => {
   const { eventsGoogle } = useSync();
+  const { calendars, events, fetchEvents } = useCalendar();
   const [items, setItems] = useState({});
   const [markedDates, setMarkedDates] = useState({});
+  const [selectedCalendar, setSelectedCalendar] = useState(null);
 
   useEffect(() => {
     if (eventsGoogle) {
@@ -60,7 +69,29 @@ const Calendar = () => {
       const marks = generateMarkedDates(formattedEvents);
       setMarkedDates(marks);
     }
-  }, [eventsGoogle]);
+
+    if (events?.length) {
+      const newItems = events.reduce((acc, event) => {
+        const date = event.startDate.split("T")[0];
+        if (!acc[date]) {
+          acc[date] = [];
+        }
+        acc[date].push({
+          name: event.title,
+          height: 50,
+          ...event,
+        });
+        return acc;
+      }, {});
+      setItems((prev) => ({ ...prev, ...newItems }));
+
+      const newMarkedDates = Object.keys(newItems).reduce((acc, date) => {
+        acc[date] = { marked: true, dotColor: "blue" };
+        return acc;
+      }, {});
+      setMarkedDates((prev) => ({ ...prev, ...newMarkedDates }));
+    }
+  }, [eventsGoogle, events]);
 
   const formatEvents = (events) => {
     const formatted = {};
@@ -99,6 +130,11 @@ const Calendar = () => {
     );
   };
 
+  const handleFetchEvents = async (calendarId) => {
+    setSelectedCalendar(calendarId);
+    await fetchEvents(calendarId);
+  };
+
   const renderItem = (item) => {
     return (
       <View style={styles.item}>
@@ -128,6 +164,32 @@ const Calendar = () => {
       <Appbar.Header mode="small">
         <Appbar.Content title="Calendar" titleStyle={{ fontWeight: "600" }} />
       </Appbar.Header>
+      <FlatList
+        data={calendars}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={[
+              styles.itemButton,
+              { borderColor: item.color },
+              selectedCalendar === item.id && { backgroundColor: item.color },
+            ]}
+            onPress={() => handleFetchEvents(item.id)}
+          >
+            <Text
+              style={[
+                { color: item.color },
+                selectedCalendar === item.id && { color: "white" },
+              ]}
+            >
+              {item.title}
+            </Text>
+          </TouchableOpacity>
+        )}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={{ maxHeight: 30 }}
+      />
       <Agenda
         items={items}
         renderItem={renderItem}
@@ -182,6 +244,15 @@ const styles = StyleSheet.create({
   },
   emptyDate: { flex: 1, justifyContent: "center", alignItems: "center" },
   emptyDateText: { fontSize: 20, color: "gray" },
+  itemButton: {
+    paddingHorizontal: 5,
+    borderWidth: 1,
+    borderRadius: 50,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
+    marginHorizontal: 5,
+  },
 });
 
 export default Calendar;
