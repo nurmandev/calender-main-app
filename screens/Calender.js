@@ -55,12 +55,12 @@ LocaleConfig.locales["en"] = {
 
 LocaleConfig.defaultLocale = "en";
 
-const Calendar = () => {
+const Calendar = ({ navigation }) => {
   const { eventsGoogle } = useSync();
-  const { calendars, events, fetchEvents } = useCalendar();
+  const { calendars, events, fetchEvents, appCalendarId } = useCalendar();
   const [items, setItems] = useState({});
   const [markedDates, setMarkedDates] = useState({});
-  const [selectedCalendar, setSelectedCalendar] = useState(null);
+  const [selectedCalendar, setSelectedCalendar] = useState(appCalendarId);
 
   useEffect(() => {
     if (eventsGoogle) {
@@ -163,9 +163,16 @@ const Calendar = () => {
     <View style={styles.container}>
       <Appbar.Header mode="small">
         <Appbar.Content title="Calendar" titleStyle={{ fontWeight: "600" }} />
+        <Appbar.Action
+          icon="plus"
+          onPress={() => navigation.push("AddEvent")}
+        />
       </Appbar.Header>
       <FlatList
-        data={calendars}
+        data={[
+          { color: "blue", id: appCalendarId, title: "All" },
+          ...calendars,
+        ]}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -245,7 +252,7 @@ const styles = StyleSheet.create({
   emptyDate: { flex: 1, justifyContent: "center", alignItems: "center" },
   emptyDateText: { fontSize: 20, color: "gray" },
   itemButton: {
-    paddingHorizontal: 5,
+    paddingHorizontal: 10,
     borderWidth: 1,
     borderRadius: 50,
     justifyContent: "center",

@@ -12,8 +12,10 @@ import {
   List,
 } from "react-native-paper";
 import { Feather, Entypo } from "@expo/vector-icons";
+import { useCalendar } from "../contexts/Calendar";
 
-const AddEvent = () => {
+const AddEvent = ({ navigation }) => {
+  const { addEvent } = useCalendar();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [color, setColor] = useState("blue");
@@ -39,10 +41,45 @@ const AddEvent = () => {
     setMenuVisible(false);
   };
 
+  const handleAddEvent = async () => {
+    if (selectedDate) {
+      const startDate = new Date(selectedDate);
+      let endDate = new Date(selectedDate);
+      switch (duration) {
+        case "1 hour":
+          endDate.setHours(startDate.getHours() + 1);
+          break;
+        case "2 hours":
+          endDate.setHours(startDate.getHours() + 2);
+          break;
+        case "5 hours":
+          endDate.setHours(startDate.getHours() + 5);
+          break;
+        case "1 day":
+          endDate.setDate(startDate.getDate() + 1);
+          break;
+        case "2 days":
+          endDate.setDate(startDate.getDate() + 2);
+          break;
+      }
+      const newEvent = {
+        title,
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+        notes: description,
+        color,
+        person,
+      };
+      const eventId = await addEvent(newEvent);
+      console.log(`New event ID: ${eventId}`);
+      navigation.goBack();
+    }
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header mode="small">
-        <Appbar.BackAction onPress={() => {}} />
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content
           title="Add an Event"
           titleStyle={{ fontWeight: "600" }}
@@ -186,7 +223,7 @@ const AddEvent = () => {
         <Button
           icon="plus"
           mode="contained"
-          onPress={() => navigation.push("AddEvent")}
+          onPress={handleAddEvent}
           labelStyle={{ fontWeight: "600", fontSize: 16 }}
           style={{ borderRadius: 15, padding: 5 }}
         >

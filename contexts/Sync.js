@@ -54,7 +54,7 @@ export const SyncProvider = ({ children }) => {
       })
       .catch((error) => {
         if (error.code !== statusCodes.SIGN_IN_REQUIRED) {
-          console.error("silent google signin", error);
+          // console.error("silent google signin", error);
         }
       });
   }, []);

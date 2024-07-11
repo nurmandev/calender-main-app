@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     marginBottom: 10,
+    borderRadius: 80,
   },
   profileName: {
     fontFamily: "DM Sans",
@@ -130,16 +131,17 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderRadius: 12,
     backgroundColor: "#ffffff",
-    height: 48,
-    marginBottom: 8,
+    // height: 48,
+    marginBottom: 5,
     alignItems: "center",
   },
   md: {
     color: "#222",
     fontFamily: "DM Sans",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
-    lineHeight: 20,
+    marginLeft: 10,
+    // lineHeight: 20,
   },
   option: {
     flexDirection: "row",
@@ -157,8 +159,9 @@ const styles = StyleSheet.create({
   redMd: {
     color: "#FF0000",
     fontFamily: "DM Sans",
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: "500",
+    marginLeft: 10,
     lineHeight: 20,
   },
   logout: {

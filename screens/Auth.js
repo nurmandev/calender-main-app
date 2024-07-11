@@ -13,6 +13,7 @@ import { login } from "../utils/api";
 const Auth = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const { handleLogin } = useAuth();
 
@@ -25,7 +26,7 @@ const Auth = ({ navigation }) => {
     setIsLoggingIn(true); // Start loading
     try {
       // const response = await login(username, password);
-      handleLogin({ username, password }); // Set user in context
+      handleLogin({ username, password, email }); // Set user in context
       navigation.push("BottomNav");
     } catch (error) {
       // Handle network errors or unexpected issues
@@ -43,6 +44,13 @@ const Auth = ({ navigation }) => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        placeholderTextColor={"#999"}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
         placeholderTextColor={"#999"}
       />
       <TextInput
