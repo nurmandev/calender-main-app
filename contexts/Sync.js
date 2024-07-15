@@ -17,6 +17,7 @@ export const SyncProvider = ({ children }) => {
   const [isAutoSyncEnabled, setIsAutoSyncEnabled] = useState(false);
   const [userOutlook, setUserOutlook] = useState(null);
   const [userGoogle, setUserGoogle] = useState(null);
+  const [userApple, setUserApple] = useState(null);
   const [eventsOutlook, setEventsOutlook] = useState([]);
   const [eventsGoogle, setEventsGoogle] = useState([]);
 
@@ -101,9 +102,7 @@ export const SyncProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
       const eventsData = response.data.value;
-      console.log(eventsData);
-      // setEvents(eventsData);
-      console.log(response);
+      setEventsOutlook(eventsData);
     } catch (error) {
       console.error("Failed to fetch events", error);
     }
@@ -123,11 +122,12 @@ export const SyncProvider = ({ children }) => {
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
           AppleAuthentication.AppleAuthenticationScope.EMAIL,
-          AppleAuthentication.AppleAuthenticationScope.CALENDAR,
         ],
       });
+      setUserApple(credential);
       // signed in
     } catch (e) {
+      console.log(e);
       if (e.code === "ERR_REQUEST_CANCELED") {
         // handle that the user canceled the sign-in flow
       } else {
@@ -138,6 +138,7 @@ export const SyncProvider = ({ children }) => {
 
   const signOutApple = async () => {
     await AppleAuthentication.signOutAsync();
+    setUserApple(null);
   };
 
   const syncToGoogle = async () => {
@@ -179,11 +180,13 @@ export const SyncProvider = ({ children }) => {
     // await GoogleSignin.signOut();
     await GoogleSignin.revokeAccess();
     setUserGoogle(null);
+    setEventsGoogle([]);
   };
 
   const logoutOutlook = async () => {
     await AuthSession.revokeAsync();
     setUserOutlook(null);
+    setEventsOutlook([]);
   };
 
   return (
@@ -194,6 +197,7 @@ export const SyncProvider = ({ children }) => {
         userGoogle,
         eventsOutlook,
         eventsGoogle,
+        userApple,
         toggleAutoSync,
         syncToGoogle,
         syncToOutlook,

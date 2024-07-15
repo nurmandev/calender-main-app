@@ -29,7 +29,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.emirace.calendarsync"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -40,7 +41,9 @@
       }
     },
     "plugins": [
-      "expo-apple-authentication",
+      [
+        "expo-apple-authentication"
+      ],
       [
         "@react-native-google-signin/google-signin",
         {

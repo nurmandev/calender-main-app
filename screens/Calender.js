@@ -205,6 +205,14 @@ const Calendar = ({ navigation }) => {
         }}
         renderEmptyData={renderEmptyData}
       />
+      <Button
+        mode="contained"
+        onPress={() => navigation.push("Events")}
+        labelStyle={{ fontWeight: "600", fontSize: 16 }}
+        style={[styles.upcoming, { borderRadius: 15, padding: 5 }]}
+      >
+        Up Coming
+      </Button>
     </View>
   );
 };
@@ -257,6 +265,7 @@ const styles = StyleSheet.create({
     padding: 5,
     marginHorizontal: 5,
   },
+  upcoming: { position: "absolute", bottom: 10, right: 10 },
 });
 
 export default Calendar;

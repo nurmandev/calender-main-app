@@ -16,6 +16,8 @@ const Sync = ({ navigation }) => {
     userOutlook,
     logoutGoogle,
     logoutOutlook,
+    signOutApple,
+    userApple,
   } = useSync();
   const [isSwitchOn, setIsSwitchOn] = React.useState(false);
   const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
@@ -58,14 +60,22 @@ const Sync = ({ navigation }) => {
                   color="black"
                 />
               )}
-              right={() => (
-                <Button
-                  onPress={syncToApple}
-                  labelStyle={{ fontSize: 18, fontWeight: "700" }}
-                >
-                  Sync
-                </Button>
-              )}
+              right={() =>
+                userApple ? (
+                  <IconButton
+                    onPress={signOutApple}
+                    iconColor="#ff0000"
+                    icon={"close"}
+                  />
+                ) : (
+                  <Button
+                    onPress={syncToApple}
+                    labelStyle={{ fontSize: 18, fontWeight: "700" }}
+                  >
+                    Sync
+                  </Button>
+                )
+              }
               style={[styles.shadowContainer, { paddingHorizontal: 10 }]}
               titleStyle={{ fontSize: 18 }}
             />

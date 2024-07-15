@@ -9,8 +9,12 @@ import {
 } from "@expo/vector-icons";
 import { useAuth } from "../contexts/Auth";
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
   const { user, handleLogout } = useAuth();
+  const logout = () => {
+    handleLogout();
+    navigation.replace("Auth");
+  };
   return (
     <View style={styles.container}>
       <Appbar.Header mode="small">
@@ -57,7 +61,10 @@ const Profile = () => {
               <Feather name="chevron-right" size={24} color="black" />
             </View>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.dropdownButton}>
+          <TouchableOpacity
+            style={styles.dropdownButton}
+            onPress={() => navigation.push("Invite")}
+          >
             <View style={styles.option}>
               <AntDesign name="user" size={24} color="black" />
               <Text style={styles.md}>Manage Users</Text>
@@ -68,10 +75,7 @@ const Profile = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.logout}>
-          <TouchableOpacity
-            style={styles.dropdownButton}
-            onPress={handleLogout}
-          >
+          <TouchableOpacity style={styles.dropdownButton} onPress={logout}>
             <View style={styles.option}>
               <SimpleLineIcons name="logout" size={24} color="black" />
               <Text style={styles.redMd}>Log Out</Text>
