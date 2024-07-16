@@ -82,13 +82,19 @@ const Events = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header mode="small">
-        <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="All Events" titleStyle={{ fontWeight: "600" }} />
+        <Appbar.Content
+          title="Coming Events"
+          titleStyle={{ fontWeight: "600" }}
+        />
+        <Appbar.Action
+          icon="calendar-month-outline"
+          onPress={() => navigation.push("Calendar")}
+        />
       </Appbar.Header>
       <FlatList
         data={getUpcomingEvents()}
         renderItem={renderItem}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         style={{ flex: 1, padding: 20 }}
       />
     </View>

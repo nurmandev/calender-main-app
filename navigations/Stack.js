@@ -4,7 +4,7 @@ import BottomNav from "./BottomNav";
 import AddEvent from "../screens/AddEvent";
 import Invite from "../screens/Invite";
 import { useAuth } from "../contexts/Auth";
-import Events from "../screens/Events";
+import Calendar from "../screens/Calender";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,7 +17,7 @@ function StackNav() {
           <Stack.Screen name="BottomNav" component={BottomNav} />
           <Stack.Screen name="AddEvent" component={AddEvent} />
           <Stack.Screen name="Invite" component={Invite} />
-          <Stack.Screen name="Events" component={Events} />
+          <Stack.Screen name="Calendar" component={Calendar} />
         </>
       ) : (
         <>

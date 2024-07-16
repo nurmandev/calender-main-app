@@ -162,6 +162,7 @@ const Calendar = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Appbar.Header mode="small">
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Calendar" titleStyle={{ fontWeight: "600" }} />
         <Appbar.Action
           icon="plus"
@@ -205,14 +206,14 @@ const Calendar = ({ navigation }) => {
         }}
         renderEmptyData={renderEmptyData}
       />
-      <Button
+      {/* <Button
         mode="contained"
         onPress={() => navigation.push("Events")}
         labelStyle={{ fontWeight: "600", fontSize: 16 }}
         style={[styles.upcoming, { borderRadius: 15, padding: 5 }]}
       >
         Up Coming
-      </Button>
+      </Button> */}
     </View>
   );
 };

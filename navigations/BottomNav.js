@@ -1,9 +1,9 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
-import Calender from "../screens/Calender";
 import Sync from "../screens/Sync";
 import Profile from "../screens/Profile";
+import Events from "../screens/Events";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +17,7 @@ function BottomNav() {
 
           if (route.name === "Sync") {
             iconName = "sync";
-          } else if (route.name === "Calendar") {
+          } else if (route.name === "Events") {
             iconName = "calendar";
           } else if (route.name === "Profile") {
             iconName = "user";
@@ -34,10 +34,10 @@ function BottomNav() {
           paddingTop: 20,
         },
       })}
-      initialRouteName="Calendar"
+      initialRouteName="Events"
     >
       <Tab.Screen name="Sync" component={Sync} />
-      <Tab.Screen name="Calendar" component={Calender} />
+      <Tab.Screen name="Events" component={Events} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
