@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { SectionList, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Appbar } from "react-native-paper";
 import Event from "../components/Event";
@@ -51,12 +51,6 @@ const Events = ({ navigation }) => {
     });
     return formatted;
   };
-  console.log(items);
-  const renderItem = ({ item }) => {
-    return (
-      <Event date={item.date} event={item.title} daysLeft={item.daysLeft} />
-    );
-  };
 
   const getUpcomingEvents = () => {
     const upcomingEvents = [];
@@ -79,6 +73,31 @@ const Events = ({ navigation }) => {
     return upcomingEvents.sort((a, b) => moment(a.date).diff(moment(b.date)));
   };
 
+  const groupEventsByMonth = (events) => {
+    const grouped = {};
+    events.forEach((event) => {
+      const month = moment(event.date).format("MMMM YYYY");
+      if (!grouped[month]) {
+        grouped[month] = [];
+      }
+      grouped[month].push(event);
+    });
+    return Object.keys(grouped).map((month) => ({
+      title: month,
+      data: grouped[month],
+    }));
+  };
+
+  const renderEventItem = ({ item }) => (
+    <Event date={item.date} event={item.title} daysLeft={item.daysLeft} />
+  );
+
+  const renderSectionHeader = ({ section: { title } }) => (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionHeaderText}>{title}</Text>
+    </View>
+  );
+
   return (
     <View style={{ flex: 1 }}>
       <Appbar.Header mode="small">
@@ -91,11 +110,12 @@ const Events = ({ navigation }) => {
           onPress={() => navigation.push("Calendar")}
         />
       </Appbar.Header>
-      <FlatList
-        data={getUpcomingEvents()}
-        renderItem={renderItem}
+      <SectionList
+        sections={groupEventsByMonth(getUpcomingEvents())}
+        renderItem={renderEventItem}
+        renderSectionHeader={renderSectionHeader}
         keyExtractor={(item, index) => index.toString()}
-        style={{ flex: 1, padding: 20 }}
+        style={{ flex: 1, paddingHorizontal: 20, backgroundColor: "white" }}
       />
     </View>
   );
@@ -103,4 +123,17 @@ const Events = ({ navigation }) => {
 
 export default Events;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  sectionHeader: {
+    paddingVertical: 5,
+    backgroundColor: "#ffffff",
+    paddingHorizontal: 10,
+    marginBottom: 5,
+    borderRadius: 5,
+  },
+  sectionHeaderText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "gray",
+  },
+});
