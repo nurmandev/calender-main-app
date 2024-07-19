@@ -41,9 +41,7 @@
       }
     },
     "plugins": [
-      [
-        "expo-apple-authentication"
-      ],
+      ["expo-apple-authentication"],
       [
         "@react-native-google-signin/google-signin",
         {
@@ -55,6 +53,12 @@
         "expo-calendar",
         {
           "calendarPermission": "Allow $(PRODUCT_NAME) to access your calendar"
+        }
+      ],
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
         }
       ]
     ]

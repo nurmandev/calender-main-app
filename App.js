@@ -6,18 +6,21 @@ import { PaperProvider } from "react-native-paper";
 import { SyncProvider } from "./contexts/Sync";
 import { CalendarProvider } from "./contexts/Calendar";
 import { AuthProvider } from "./contexts/Auth";
+import { ContactsProvider } from "./contexts/Contacts";
 
 export default function App() {
   return (
     <NavigationContainer style={styles.container}>
       <AuthProvider>
         <PaperProvider>
-          <CalendarProvider>
-            <SyncProvider>
-              <StatusBar style="auto" />
-              <StackNav />
-            </SyncProvider>
-          </CalendarProvider>
+          <ContactsProvider>
+            <CalendarProvider>
+              <SyncProvider>
+                <StatusBar style="auto" />
+                <StackNav />
+              </SyncProvider>
+            </CalendarProvider>
+          </ContactsProvider>
         </PaperProvider>
       </AuthProvider>
     </NavigationContainer>

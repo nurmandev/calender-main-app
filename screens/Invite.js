@@ -8,56 +8,25 @@ import {
   Image,
   Dimensions,
   ScrollView,
+  FlatList,
+  Share,
+  Alert,
 } from "react-native";
 import InviteUser from "../components/Invite";
 import { AntDesign } from "@expo/vector-icons";
 import { Appbar } from "react-native-paper";
+import { useContacts } from "../contexts/Contacts";
 
 const Invite = ({ navigation }) => {
   const [title, setTitle] = useState("");
   const { height, screenHeight } = Dimensions.get("window");
-
-  const Data = [
-    {
-      name: "MarvinMcKinney",
-      iconUrl: require("../assets/images/friends/MarvinMcKinney.png"),
-    },
-    {
-      name: "TheresaWebb",
-      iconUrl: require("../assets/images/friends/TheresaWebb.png"),
-    },
-    {
-      name: "RobertFox",
-      iconUrl: require("../assets/images/friends/RobertFox.png"),
-    },
-    {
-      name: "SavannaNguyen",
-      iconUrl: require("../assets/images/friends/SavannaNguyen.png"),
-    },
-    {
-      name: "CourtneyHenry",
-      iconUrl: require("../assets/images/friends/CourtneyHenry.png"),
-    },
-    {
-      name: "ArleneMcCoy",
-      iconUrl: require("../assets/images/friends/ArleneMcCoy.png"),
-    },
-    {
-      name: "DarleneRobertson",
-      iconUrl: require("../assets/images/friends/DarleneRobertson.png"),
-    },
-    {
-      name: "CameronWilliamson",
-      iconUrl: require("../assets/images/friends/CameronWilliamson.png"),
-    },
-  ];
+  const { contacts } = useContacts();
 
   const handleTitleChange = (newText) => {
     setTitle(newText);
   };
-
-  const searchData = Data.filter((item) =>
-    item.name.toLowerCase().includes(title.toLowerCase())
+  const searchData = contacts.filter(
+    (item) => item.name && item.name.toLowerCase().includes(title.toLowerCase())
   );
 
   const changeName = (name) => {
@@ -70,6 +39,27 @@ const Invite = ({ navigation }) => {
       }
     }
     return newName;
+  };
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        title: "Calendar App",
+        message:
+          'Hey! I am using this amazing app called "Calendar App". Download it now from the link below. \n\nhttps://www.calendarapp.com',
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Alert.alert(error.message);
+    }
   };
 
   return (
@@ -85,34 +75,34 @@ const Invite = ({ navigation }) => {
         <View style={styles.section}>
           <Text style={styles.text}>Invite Via</Text>
           <View style={styles.colorContainer}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image source={require("../assets/images/social/Frame23.png")} />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image
                 source={require("../assets/images/social/Frame24.png")}
                 style={styles.social}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image
                 source={require("../assets/images/social/Frame25.png")}
                 style={styles.social}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image
                 source={require("../assets/images/social/Frame26.png")}
                 style={styles.social}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image
                 source={require("../assets/images/social/Frame27.png")}
                 style={styles.social}
               />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onShare}>
               <Image
                 source={require("../assets/images/social/Frame28.png")}
                 style={styles.social}
@@ -131,15 +121,20 @@ const Invite = ({ navigation }) => {
             />
           </View>
         </View>
-        <ScrollView style={styles.section}>
-          {searchData.map((item, index) => (
+        <FlatList
+          data={searchData}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
             <InviteUser
               name={changeName(item.name)}
+              number={item?.phoneNumbers[0].digits}
               iconUrl={item.iconUrl}
-              key={index}
             />
-          ))}
-        </ScrollView>
+          )}
+          initialNumToRender={10} // Adjust based on your needs
+          maxToRenderPerBatch={5} // Adjust based on your needs
+          windowSize={5}
+        />
       </View>
     </View>
   );

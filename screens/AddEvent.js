@@ -72,6 +72,7 @@ const AddEvent = ({ navigation }) => {
       };
       const eventId = await addEvent(newEvent);
       console.log(`New event ID: ${eventId}`);
+      alert("Event added successfully");
       navigation.goBack();
     }
   };

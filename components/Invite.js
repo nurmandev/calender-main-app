@@ -1,23 +1,56 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import * as SMS from "expo-sms";
 
-const InviteUser = ({ name, iconUrl }) => {
+const InviteUser = React.memo(({ name, number, iconUrl }) => {
+  console.log(number);
+  const [loading, setLoading] = useState(false);
+  const handleInvite = async () => {
+    try {
+      setLoading(true);
+      const isAvailable = await SMS.isAvailableAsync();
+      if (isAvailable) {
+        const { result } = await SMS.sendSMSAsync(
+          [number],
+          'Hey! I am using this amazing app called "Calendar App". Download it now from the link below. \n\nhttps://www.calendarapp.com',
+          {
+            // attachments: {
+            //   uri: 'path/myfile.png',
+            //   mimeType: 'image/png',
+            //   filename: 'myfile.png',
+            // },
+          }
+        );
+        console.log(result);
+        setLoading(false);
+      } else {
+        // misfortune... there's no SMS available on this device
+        console.log("sms not available");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
   return (
-    <TouchableOpacity style={styles.dropdownButton}>
+    <TouchableOpacity style={styles.dropdownButton} onPress={handleInvite}>
       <View style={styles.friend}>
-        <Image source={iconUrl} style={styles.logo} />
-        <Text style={styles.dropdownText}>{name}</Text>
+        {/* <Image source={iconUrl} style={styles.logo} /> */}
+        <Text style={styles.dropdownText} numberOfLines={1}>
+          {name}
+        </Text>
       </View>
       <View style={styles.invite}>
         <Image
           style={styles.addPerson}
           source={require("../assets/images/gadgets/profile-add.png")}
         />
-        <Text style={styles.sm}>invite</Text>
+        <Text style={styles.sm}>{loading ? "Sending" : "invite"}</Text>
       </View>
     </TouchableOpacity>
   );
-};
+});
 
 const styles = StyleSheet.create({
   dropdownButton: {
@@ -42,6 +75,7 @@ const styles = StyleSheet.create({
   friend: {
     flexDirection: "row",
     alignItems: "center",
+    flex: 1,
   },
   invite: {
     flexDirection: "row",
