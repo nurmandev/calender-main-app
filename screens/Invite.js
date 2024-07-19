@@ -124,13 +124,15 @@ const Invite = ({ navigation }) => {
         <FlatList
           data={searchData}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <InviteUser
-              name={changeName(item.name)}
-              number={item?.phoneNumbers[0].digits}
-              iconUrl={item.iconUrl}
-            />
-          )}
+          renderItem={({ item }) =>
+            item.phoneNumbers && (
+              <InviteUser
+                name={changeName(item.name)}
+                number={item?.phoneNumbers[0].digits}
+                iconUrl={item.iconUrl}
+              />
+            )
+          }
           initialNumToRender={10} // Adjust based on your needs
           maxToRenderPerBatch={5} // Adjust based on your needs
           windowSize={5}
