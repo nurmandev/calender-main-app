@@ -5,6 +5,7 @@ import AddEvent from "../screens/AddEvent";
 import Invite from "../screens/Invite";
 import { useAuth } from "../contexts/Auth";
 import Calendar from "../screens/Calender";
+import ShareCalendar from "../screens/ShareCalendar";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function StackNav() {
           <Stack.Screen name="AddEvent" component={AddEvent} />
           <Stack.Screen name="Invite" component={Invite} />
           <Stack.Screen name="Calendar" component={Calendar} />
+          <Stack.Screen name="Share" component={ShareCalendar} />
         </>
       ) : (
         <>

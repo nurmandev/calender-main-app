@@ -1,4 +1,10 @@
-import { SectionList, StyleSheet, Text, View } from "react-native";
+import {
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { Appbar } from "react-native-paper";
 import Event from "../components/Event";
@@ -109,6 +115,12 @@ const Events = ({ navigation }) => {
           icon="calendar-month-outline"
           onPress={() => navigation.push("Calendar")}
         />
+        <TouchableOpacity
+          style={{ padding: 5 }}
+          onPress={() => navigation.push("Share")}
+        >
+          <Text>Share</Text>
+        </TouchableOpacity>
       </Appbar.Header>
       <SectionList
         sections={groupEventsByMonth(getUpcomingEvents())}

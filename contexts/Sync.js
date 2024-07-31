@@ -20,6 +20,8 @@ export const SyncProvider = ({ children }) => {
   const [userApple, setUserApple] = useState(null);
   const [eventsOutlook, setEventsOutlook] = useState([]);
   const [eventsGoogle, setEventsGoogle] = useState([]);
+  const [accessToken, setAccessToken] = useState(null);
+  const [googleCalendar, setGoogleCalendar] = useState([]);
 
   const discovery = AuthSession.useAutoDiscovery(
     `https://login.microsoftonline.com/${authConfig.tenantId}/v2.0`
@@ -50,7 +52,9 @@ export const SyncProvider = ({ children }) => {
       .then((userInfo) => {
         setUserGoogle(userInfo);
         GoogleSignin.getTokens().then(({ accessToken }) => {
+          setAccessToken(accessToken);
           fetchEventsGoogle(accessToken);
+          fetchCalendarList(accessToken);
         });
       })
       .catch((error) => {
@@ -147,7 +151,9 @@ export const SyncProvider = ({ children }) => {
       const userInfo = await GoogleSignin.signIn();
       setUserGoogle(userInfo);
       const { accessToken } = await GoogleSignin.getTokens();
+      setAccessToken(accessToken);
       fetchEventsGoogle(accessToken);
+      fetchCalendarList(accessToken);
     } catch (error) {
       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
         // user cancelled the login flow
@@ -176,6 +182,48 @@ export const SyncProvider = ({ children }) => {
     }
   };
 
+  async function fetchCalendarList(accessToken) {
+    try {
+      const calendarListUrl =
+        "https://www.googleapis.com/calendar/v3/users/me/calendarList";
+
+      const response = await axios.get(calendarListUrl, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      setGoogleCalendar(response.data.items);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function shareCalendar(calendarId, email, permission) {
+    if (!accessToken) return;
+    try {
+      const calendarApiUrl = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/acl`;
+
+      const rule = {
+        scope: {
+          type: "user", // Options: user, group, domain, default
+          value: email, // Email of the user to share the calendar with
+        },
+        role: "reader", // Options: none, freeBusyReader, reader, writer, owner
+      };
+
+      const response = await axios.post(calendarApiUrl, rule, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("done", response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const logoutGoogle = async () => {
     // await GoogleSignin.signOut();
     await GoogleSignin.revokeAccess();
@@ -198,6 +246,7 @@ export const SyncProvider = ({ children }) => {
         eventsOutlook,
         eventsGoogle,
         userApple,
+        googleCalendar,
         toggleAutoSync,
         syncToGoogle,
         syncToOutlook,
@@ -205,6 +254,7 @@ export const SyncProvider = ({ children }) => {
         logoutGoogle,
         logoutOutlook,
         signOutApple,
+        shareCalendar,
       }}
     >
       {children}

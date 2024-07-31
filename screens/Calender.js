@@ -158,7 +158,6 @@ const Calendar = ({ navigation }) => {
       </View>
     );
   };
-
   return (
     <View style={styles.container}>
       <Appbar.Header mode="small">
@@ -176,8 +175,10 @@ const Calendar = ({ navigation }) => {
           <TouchableOpacity
             style={[
               styles.itemButton,
-              { borderColor: item.color },
-              selectedCalendar === item.id && { backgroundColor: item.color },
+              { borderColor: item.color || item.backgroundColor },
+              selectedCalendar === item.id && {
+                backgroundColor: item.color || item.backgroundColor,
+              },
             ]}
             onPress={() => handleFetchEvents(item.id)}
           >
@@ -187,7 +188,7 @@ const Calendar = ({ navigation }) => {
                 selectedCalendar === item.id && { color: "white" },
               ]}
             >
-              {item.title}
+              {item.title || item.summary}
             </Text>
           </TouchableOpacity>
         )}
